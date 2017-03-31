@@ -20,6 +20,21 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
 
+    <!-- firebase, ignore for now -->
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCAN1msPQ6C5f7d2RDknR7fDGd-D-wzwH0",
+            authDomain: "barapp-1490919266684.firebaseapp.com",
+            databaseURL: "https://barapp-1490919266684.firebaseio.com",
+            projectId: "barapp-1490919266684",
+            storageBucket: "barapp-1490919266684.appspot.com",
+            messagingSenderId: "814586912261"
+        };
+        firebase.initializeApp(config);
+    </script>
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -53,5 +68,5 @@
   </script>
 
 
-  </body>
+  
 </html>

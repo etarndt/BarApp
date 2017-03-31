@@ -1,6 +1,6 @@
 {
   "name": "BarApp",
-  "app_id": "",
+  "app_id": "db0e8776",
   "gulpStartupTasks": [
     "sass",
     "watch"
