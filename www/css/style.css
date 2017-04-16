@@ -1,1 +1,8 @@
-/* Empty. Add your own CSS if you like */
+.nav_color{
+    background: #ff0000;
+}
+
+#uu:hover {
+    background-color: green;
+    color:white;
+}
