@@ -52,7 +52,8 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
                 url:'/summary',
                 views: {
                     'summary-tab': {
-                        templateUrl: 'templates/summary.html'
+                        templateUrl: 'templates/summary.html',
+                        controller: 'buttonCtrl'
                     }
                 }
             })
