@@ -66,6 +66,11 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
                 templateUrl: 'templates/help.html',
                 controller: 'buttonCtrl'
             })
+            .state('results', {
+                url: '/results',
+                templateUrl: 'templates/results.html',
+                controller: 'buttonCtrl'
+            })
         .state('line', {
             url: '/line',
             templateUrl: 'templates/line.html',
@@ -237,5 +242,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation) {
         $state.go('tabs.overview');
     }
 
+    $scope.results = function() {
+        $state.go('results');
+    }
 
 });

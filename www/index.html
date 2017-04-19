@@ -137,9 +137,31 @@
   <script id="templates/summary.html" type="text/ng-template">
     <ion-view title="Summary">
       <h1>Summary</h1>
+      <ion-content>
+        <h2>Click a bar to see wait time!</h2>
+        <button class="button button-clear" id="uu2" style="background-image:url('img/uu.png'); background-size:cover"ng-click="results()"></button>
+        <button class="button button-clear" id="kk2" style="background-image:url('img/kk.jpg'); background-size:cover"ng-click="results()"></button>
+        <button class="button button-clear" id="chasers2" style="background-image:url('img/chasers.jpeg'); background-size:cover"ng-click="results()"></button>
+        <button class="button button-clear" id="whiskeys2" style="background-image:url('img/whiskeys.png'); background-size:cover"ng-click="results()"></button>
+        <button class="button button-clear" id="nitty2" style="background-image:url('img/nitty.png'); background-size:cover"ng-click="results()"></button>
+      </ion-content>
       </ion-content>
     </ion-view>
 </script>
+
+  <script id="templates/results.html" type="text/ng-template">
+    <ion-view title="Summary">
+      <ion-nav-buttons side="right">
+        <button class="button button-icon ion-help"ng-click="help()"></button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon ion-close"ng-click="back()"></button>
+      </ion-nav-buttons>
+      <ion-content>
+        <h2>The line is ...</h2>
+      </ion-content>
+    </ion-view>
+  </script>
 
   <script id="templates/settings.html" type="text/ng-template">
   <ion-view title="Settings">
