@@ -70,7 +70,10 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
             .state('results', {
                 url: '/results',
                 templateUrl: 'templates/results.html',
-                controller: 'buttonCtrl'
+                controller: 'resultsCtrl',
+                params: {
+                    barName: 'ERROR'
+                }
             })
         .state('line', {
             url: '/line',
@@ -222,6 +225,43 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
 
     });
 
+barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $stateParams) {
+    $scope.retrieve_data = function() {
+
+
+        return firebase.database().ref('Data').once('value').then(function(snapshot) {
+
+            var counter = 1;
+            $scope.bar_stats = [];
+            bar_stats = snapshot.val()
+
+            for (i = 0; i < snapshot.numChildren(); i++){
+                if(bar_stats[i+1]['name'] == $stateParams.barName)
+                    counter = i+1
+            }
+
+            $scope.length = bar_stats[counter]['Line_length'];
+            $scope.name = bar_stats[counter]['name'];
+            $scope.barName = $stateParams.barName;
+
+
+        });
+
+
+
+    }
+
+    $scope.help = function() {
+        $state.go('help');
+    }
+
+    $scope.back = function() {
+        $state.go('tabs.overview');
+    }
+
+    $scope.retrieve_data();
+});
+
 barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation) {
 
     $scope.back = function() {
@@ -243,8 +283,11 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation) {
         $state.go('tabs.overview');
     }
 
-    $scope.results = function() {
-        $state.go('results');
+    $scope.results = function(name) {
+        console.log(name);
+        $state.go('results', {
+            barName:name
+        });
     }
 
 });
