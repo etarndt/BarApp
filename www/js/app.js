@@ -86,20 +86,6 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
 
     });
 
-    // array to store bar information - not working
-    // var bars = [
-    //     {
-    //         bar: 'The Double U',
-    //         lat: '43.0734',
-    //         lon: '-89.3968'
-    //     },
-    //     {
-    //         bar: 'Kollege Klub',
-    //         lat: '43.0756',
-    //         lon: '-89.3971'
-    //     }
-    // ]
-
 
     barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation) {
         var options = {timeout: 10000, enableHighAccuracy: true};
@@ -148,6 +134,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
             // Geo Location /
             navigator.geolocation.getCurrentPosition(function(pos) {
                 map.setCenter(new google.maps.LatLng(43.072932, -89.396565));
@@ -225,7 +212,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
 
     });
 
-barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $stateParams) {
+barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $stateParams, $ionicPopup) {
     $scope.retrieve_data = function() {
 
 
@@ -251,29 +238,28 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
 
     }
 
-    $scope.help = function() {
-        $state.go('help');
-    }
-
-    $scope.back = function() {
-        $state.go('tabs.overview');
-    }
+    // $scope.back = function() {
+    //     $state.go('tabs.overview');
+    // }
 
     $scope.retrieve_data();
 });
 
-barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation) {
+barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup) {
 
     $scope.back = function() {
         $state.go('tabs.overview');
     }
 
-    $scope.backCreate = function() {
-        $state.go('tabs.add');
-    }
-
     $scope.help = function() {
-        $state.go('help');
+
+            var alertPopup = $ionicPopup.alert({
+                title: 'How to submit a post',
+                template: 'Just click on the bar and the estimated wait time, and it will be recorded!'
+            });
+        alertPopup.then(function(res) {
+            console.log('Thank you');
+        });
     }
 
     $scope.line = function() {
