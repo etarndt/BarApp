@@ -20,6 +20,7 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
 
+
     <!-- firebase, ignore for now -->
     <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
     <script>
@@ -58,7 +59,7 @@
         <!--<button class="button button-icon ion-ios-gear"ng-click="settingsClick()"></button>-->
       <!--</div>-->
     <!--</ion-header-bar>-->
-  <ion-nav-bar class="bar-assertive">
+  <ion-nav-bar class="bar-positive">
     <ion-nav-back-button>
     </ion-nav-back-button>
   </ion-nav-bar>
@@ -106,12 +107,41 @@
         <button class="button button-icon ion-close"ng-click="back()"></button>
       </ion-nav-buttons>
       <ion-content>
-        <h2>What bar are you at?</h2>
-        <button class="button button-clear" id="uu" style="background-image:url('img/uu.png'); background-size:cover"ng-click="line()"></button>
-        <button class="button button-clear" id="kk" style="background-image:url('img/kk.jpg'); background-size:cover"ng-click="line()"></button>
-        <button class="button button-clear" id="chasers" style="background-image:url('img/chasers.jpeg'); background-size:cover"ng-click="line()"></button>
-        <button class="button button-clear" id="whiskeys" style="background-image:url('img/whiskeys.png'); background-size:cover"ng-click="line()"></button>
-        <button class="button button-clear" id="nitty" style="background-image:url('img/nitty.png'); background-size:cover"ng-click="line()"></button>
+        <div class="item item-divider">
+          What bar are you at?
+        </div>
+        <ion-list>
+          <li class="item" ng-click="line()" ng-value="line">
+            <div class="row">
+            <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
+            <div class="col"><h2>The Double U</h2><p> Mon-Sun 11am-2am</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line()" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
+              <div class="col"><h2>The Kollege Klub</h2><p> Mon-Sun 11am-2am</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line()" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
+              <div class="col"><h2>Chasers Bar and Grille</h2><p> Mon-Sun 11am-2am</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line()" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
+              <div class="col"><h2>Whiskey Jacks Saloon</h2><p> Mon-Sun 11am-2am</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line()" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
+              <div class="col"><h2>The Nitty Gritty</h2><p> Mon-Sun 11am-2am</p> </div>
+            </div>
+          </li>
+        </ion-list>
       </ion-content>
     </ion-view>
 </script>
@@ -125,11 +155,22 @@
         <button class="button button-icon ion-close"ng-click="back()"></button>
       </ion-nav-buttons>
       <ion-content>
-        <h2>How's the line?</h2>
-        <button class="button-dark" ng-click="submit()">Very Long</button>
-        <button class="button-calm" ng-click="submit()">Kind of Long</button>
-        <button class="button-balanced" ng-click="submit()">Pretty short</button>
-        <button class="button-assertive" ng-click="submit()">No Line</button>
+        <div class="item item-divider">
+          How's the line
+        </div>
+        <button class="button button-full button-stable" ng-click="submit()">
+          Very Long
+        </button>
+        <button class="button button-full button-stable" ng-click="submit()">
+          Kind of Long
+        </button>
+        <button class="button button-full button-stable" ng-click="submit()">
+          Pretty Short
+        </button>
+        <button class="button button-full button-stable" ng-click="submit()">
+          No Line
+        </button>
+
       </ion-content>
     </ion-view>
   </script>
@@ -138,13 +179,44 @@
     <ion-view title="Summary">
       <h1>Summary</h1>
       <ion-content>
-        <h2>Click a bar to see wait time!</h2>
-        <button class="button button-clear" id="uu2" style="background-image:url('img/uu.png'); background-size:cover"ng-click="results('UU')"></button>
-        <button class="button button-clear" id="kk2" style="background-image:url('img/kk.jpg'); background-size:cover"ng-click="results('KK')"></button>
-        <button class="button button-clear" id="chasers2" style="background-image:url('img/chasers.jpeg'); background-size:cover"ng-click="results('Chasers')"></button>
-        <button class="button button-clear" id="whiskeys2" style="background-image:url('img/whiskeys.png'); background-size:cover"ng-click="results('Whiskeys')"></button>
-        <button class="button button-clear" id="nitty2" style="background-image:url('img/nitty.png'); background-size:cover"ng-click="results('Nitty Gritty')"></button>
-      </ion-content>
+
+        <div class="item item-divider">
+          Click to see more on the wait time.
+        </div>
+        <ul class="list">
+
+          <li class="item" ng-click="results('UU')">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
+              <div class="col"><h2>The Double U</h2><p> Average wait time is...</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('KK')" >
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
+              <div class="col"><h2>The Kollege Klub</h2><p> Average wait time is...</p> </div>
+            </div>
+          </li>
+          <li class="item">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
+              <div class="col"><h2>Chasers Bar and Grille</h2><p> Average wait time is...</p> </div>
+            </div>
+          </li>
+          <li class="item">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
+              <div class="col"><h2>Whiskey Jacks Saloon</h2><p> Average wait time is...</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('Nitty Gritty')">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
+              <div class="col"><h2>The Nitty Gritty</h2><p> Average wait time is...</p> </div>
+            </div>
+          </li>
+        </ul>
+
       </ion-content>
     </ion-view>
 </script>
