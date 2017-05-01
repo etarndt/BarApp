@@ -235,7 +235,7 @@
 </script>
 
   <script id="templates/results.html" type="text/ng-template">
-    <ion-view title="Summary">
+    <ion-view title="Hours">
       <ion-nav-buttons side="right">
         <button class="button button-icon ion-help"ng-click="help()"></button>
       </ion-nav-buttons>
@@ -243,37 +243,63 @@
         <button class="button button-icon ion-ios-arrow-back"ng-click="back()"></button>
       </ion-nav-buttons>
       <ion-content>
-        <h2>The line at {{name}} is ... {{length}}</h2>
-        <table style="width:50%">
-          <tr>
-            <td>Monday</td>
-            <td>{{mondayHours}}</td>
-          </tr>
-          <tr>
-            <td>Tuesday</td>
-            <td>{{tuesdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Wednesday</td>
-            <td>{{wednesdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Thursday</td>
-            <td>{{thursdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Friday</td>
-            <td>{{fridayHours}}</td>
-          </tr>
-          <tr>
-            <td>Saturday</td>
-            <td>{{saturdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Sunday</td>
-            <td>{{sundayHours}}</td>
-          </tr>
-        </table>
+
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+            <div class="col col-50"><h3>Monday</h3></div>
+            <div> <p> {{mondayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Tuesday</h3></div>
+              <div> <p> {{tuesdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Wednesday</h3></div>
+              <div> <p> {{wednesdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Thursday</h3></div>
+              <div> <p> {{thursdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Friday</h3></div>
+              <div> <p> {{fridayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Saturday</h3></div>
+              <div> <p> {{saturdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Sunday</h3></div>
+              <div> <p> {{sundayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
       </ion-content>
     </ion-view>
   </script>
