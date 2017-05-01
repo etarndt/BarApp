@@ -53,7 +53,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
                 views: {
                     'summary-tab': {
                         templateUrl: 'templates/summary.html',
-                        controller: 'buttonCtrl'
+                        controller: 'summaryCtrl'
                     }
                 }
             })
@@ -241,11 +241,12 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
 
     }
 
+    $scope.retrieve_data();
+
     $scope.back = function() {
-         $state.go('tabs.overview');
+         $state.go('tabs.summary');
     }
 
-    $scope.retrieve_data();
 });
 
 barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter) {
@@ -368,6 +369,64 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
         $scope.addTime()
         $state.go('tabs.overview');
     }
+
+    $scope.results = function(name) {
+        //console.log(name);
+        $state.go('results', {
+            barName:name
+        });
+    }
+
+});
+
+barApp.controller('summaryCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter) {
+
+    $scope.retrieve_data = function() {
+
+
+        return firebase.database().ref('Data').once('value').then(function(snapshot) {
+
+            var counter = 1;
+            $scope.bar_stats = [];
+            bar_stats = snapshot.val()
+
+            for (i = 0; i < snapshot.numChildren(); i++){
+                if(bar_stats[i+1]['name'] == $stateParams.barName)
+                    counter = i+1
+            }
+
+            $scope.waitDoubleU = bar_stats[1]['Line_length'];
+            $scope.waitWandos = bar_stats[2]['Line_length'];
+            $scope.waitKK = bar_stats[3]['Line_length'];
+            $scope.waitChasers = bar_stats[4]['Line_length'];
+            $scope.waitWhiskeys = bar_stats[5]['Line_length'];
+            $scope.waitNitty = bar_stats[6]['Line_length'];
+
+
+        });
+
+
+
+    }
+
+    $scope.retrieve_data();
+
+    $scope.help = function() {
+
+        var alertPopup = $ionicPopup.alert({
+            title: 'Help',
+            template: 'This page displays the wait times for Madison bars. Click on a bar to view more information.'
+        });
+        alertPopup.then(function(res) {
+            console.log('Thank you');
+        });
+    }
+
+    $scope.line = function(barID) {
+        $state.go('line', {
+            barID: barID
+        });
+    };
 
     $scope.results = function(name) {
         //console.log(name);
