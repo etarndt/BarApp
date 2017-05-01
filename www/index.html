@@ -114,37 +114,37 @@
           <li class="item" ng-click="line(1)" ng-value="line">
             <div class="row">
             <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
-            <div class="col"><h2>The Double U</h2><p> Mon-Sun 11am-2am</p> </div>
+            <div class="col"><h2>The Double U</h2><p>Today's Hours: {{todaysHoursDoubleU}}</p> </div>
             </div>
           </li>
           <li class="item" ng-click="line(2)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/wandos2.jpg'> </div>
-              <div class="col"><h2>Wandos</h2><p> Mon-Sun 11am-2am</p> </div>
+              <div class="col"><h2>Wandos</h2><p>Today's Hours: {{todaysHoursWandos}}</p> </div>
             </div>
           </li>
           <li class="item" ng-click="line(3)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
-              <div class="col"><h2>The Kollege Klub</h2><p> Mon-Sun 11am-2am</p> </div>
+              <div class="col"><h2>The Kollege Klub</h2><p>Today's Hours: {{todaysHoursKK}}</p> </div>
             </div>
           </li>
           <li class="item" ng-click="line(4)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
-              <div class="col"><h2>Chasers Bar and Grille</h2><p> Mon-Sun 11am-2am</p> </div>
+              <div class="col"><h2>Chasers Bar and Grille</h2><p>Today's Hours: {{todaysHoursChasers}}</p> </div>
             </div>
           </li>
           <li class="item" ng-click="line(5)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
-              <div class="col"><h2>Whiskey Jacks Saloon</h2><p> Mon-Sun 11am-2am</p> </div>
+              <div class="col"><h2>Whiskey Jacks Saloon</h2><p>Today's Hours: {{todaysHoursWhiskeys}}</p> </div>
             </div>
           </li>
           <li class="item" ng-click="line(6)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
-              <div class="col"><h2>The Nitty Gritty</h2><p> Mon-Sun 11am-2am</p> </div>
+              <div class="col"><h2>The Nitty Gritty</h2><p>Today's Hours: {{todaysHoursNitty}}</p> </div>
             </div>
           </li>
         </ion-list>
@@ -230,8 +230,6 @@
             </div>
           </li>
         </ul>
-
-<!--&gt;>>>>>> 460e289d37c0bb15de3765e228a858e892e5ca16-->
       </ion-content>
     </ion-view>
 </script>
@@ -246,6 +244,36 @@
       </ion-nav-buttons>
       <ion-content>
         <h2>The line at {{name}} is ... {{length}}</h2>
+        <table style="width:50%">
+          <tr>
+            <td>Monday</td>
+            <td>{{mondayHours}}</td>
+          </tr>
+          <tr>
+            <td>Tuesday</td>
+            <td>{{tuesdayHours}}</td>
+          </tr>
+          <tr>
+            <td>Wednesday</td>
+            <td>{{wednesdayHours}}</td>
+          </tr>
+          <tr>
+            <td>Thursday</td>
+            <td>{{thursdayHours}}</td>
+          </tr>
+          <tr>
+            <td>Friday</td>
+            <td>{{fridayHours}}</td>
+          </tr>
+          <tr>
+            <td>Saturday</td>
+            <td>{{saturdayHours}}</td>
+          </tr>
+          <tr>
+            <td>Sunday</td>
+            <td>{{sundayHours}}</td>
+          </tr>
+        </table>
       </ion-content>
     </ion-view>
   </script>

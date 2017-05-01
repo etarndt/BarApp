@@ -241,7 +241,40 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
 
     }
 
+    $scope.retrieve_hours = function() {
+
+
+        return firebase.database().ref('Bars').once('value').then(function(snapshot) {
+
+            var counter = 1;
+            $scope.bar_hours = [];
+            $scope.bar_hours = snapshot.val()
+
+            for (i = 0; i < snapshot.numChildren(); i++){
+                if($scope.bar_hours[i+1]['bar'] == $stateParams.barName)
+                    counter = i+1
+            }
+
+            $scope.hours = $scope.bar_hours[counter]['hours'];
+
+
+            $scope.mondayHours = $scope.hours['Monday']
+            $scope.tuesdayHours = $scope.hours['Tuesday']
+            $scope.wednesdayHours = $scope.hours['Wednesday']
+            $scope.thursdayHours = $scope.hours['Thursday']
+            $scope.fridayHours = $scope.hours['Friday']
+            $scope.saturdayHours = $scope.hours['Saturday']
+            $scope.sundayHours = $scope.hours['Sunday']
+
+
+        });
+
+
+
+    }
+
     $scope.retrieve_data();
+    $scope.retrieve_hours();
 
     $scope.back = function() {
          $state.go('tabs.summary');
@@ -369,6 +402,28 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
         $scope.addTime()
         $state.go('tabs.overview');
     }
+
+    $scope.todaysHours = function() {
+        return firebase.database().ref('Bars').once('value').then(function(snapshot) {
+
+            var counter = 1;
+            $scope.bar_hours = [];
+            $scope.bar_hours = snapshot.val()
+
+            $scope.todaysDay = $filter('date')(new Date(), 'EEEE', '-0500');
+
+            // $scope.todaysHoursField = $scope.hours[$scope.todaysDay]
+            $scope.todaysHoursDoubleU = $scope.bar_hours[1]['hours'][$scope.todaysDay];
+            $scope.todaysHoursWandos = $scope.bar_hours[2]['hours'][$scope.todaysDay];
+            $scope.todaysHoursKK = $scope.bar_hours[3]['hours'][$scope.todaysDay];
+            $scope.todaysHoursChasers = $scope.bar_hours[4]['hours'][$scope.todaysDay];
+            $scope.todaysHoursWhiskeys = $scope.bar_hours[5]['hours'][$scope.todaysDay];
+            $scope.todaysHoursNitty = $scope.bar_hours[6]['hours'][$scope.todaysDay];
+
+        });
+    }
+
+    $scope.todaysHours();
 
     $scope.results = function(name) {
         //console.log(name);
