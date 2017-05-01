@@ -78,7 +78,10 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
         .state('line', {
             url: '/line',
             templateUrl: 'templates/line.html',
-            controller: 'buttonCtrl'
+            controller: 'buttonCtrl',
+            params: {
+                barID: 'ERROR'
+            }
         });
 
 
@@ -238,15 +241,14 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
 
     }
 
-    // $scope.back = function() {
-    //     $state.go('tabs.overview');
-    // }
+    $scope.back = function() {
+         $state.go('tabs.overview');
+    }
 
     $scope.retrieve_data();
 });
 
-barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup) {
-
+barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter) {
     $scope.back = function() {
         $state.go('tabs.overview');
     }
@@ -262,15 +264,113 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
         });
     }
 
-    $scope.line = function() {
-        $state.go('line');
+    $scope.line = function(barID) {
+        $state.go('line', {
+            barID: barID
+        });
     }
-    $scope.submit = function() {
+    $scope.submitLong = function() {
+        $scope.addData = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                console.log(snapshot.val()[$stateParams.barID]['long'])
+                $scope.longOldVal = snapshot.val()[$stateParams.barID]['long']
+
+                return firebase.database().ref('Data/' + $stateParams.barID + '/long').set($scope.longOldVal + 1)
+
+            });
+        }
+
+        $scope.addTime = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                var date = new Date();
+                $scope.date = $filter('date')(new Date(), 'yyyyMMddHH', '-0500');
+                $scope.timestamp = parseInt($scope.date,10)
+                return firebase.database().ref('Data/' + $stateParams.barID + '/lastTimestamp').set($scope.timestamp)
+            });
+        }
+
+        $scope.addData()
+        $scope.addTime()
+        $state.go('tabs.overview');
+    }
+
+    $scope.submitMedium = function() {
+        $scope.addData = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                console.log(snapshot.val()[$stateParams.barID]['medium'])
+                $scope.mediumOldVal = snapshot.val()[$stateParams.barID]['medium']
+
+                return firebase.database().ref('Data/' + $stateParams.barID + '/medium').set($scope.mediumOldVal + 1)
+
+            });
+        }
+
+        $scope.addTime = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                var date = new Date();
+                $scope.date = $filter('date')(new Date(), 'yyyyMMddHH', '-0500');
+                $scope.timestamp = parseInt($scope.date,10)
+                return firebase.database().ref('Data/' + $stateParams.barID + '/lastTimestamp').set($scope.timestamp)
+            });
+        }
+
+        $scope.addData()
+        $scope.addTime()
+        $state.go('tabs.overview');
+    }
+
+    $scope.submitShort = function() {
+        $scope.addData = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                console.log(snapshot.val()[$stateParams.barID]['short'])
+                $scope.shortOldVal = snapshot.val()[$stateParams.barID]['short']
+
+                return firebase.database().ref('Data/' + $stateParams.barID + '/short').set($scope.shortOldVal + 1)
+
+            });
+        }
+
+        $scope.addTime = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                var date = new Date();
+                $scope.date = $filter('date')(new Date(), 'yyyyMMddHH', '-0500');
+                $scope.timestamp = parseInt($scope.date,10)
+                return firebase.database().ref('Data/' + $stateParams.barID + '/lastTimestamp').set($scope.timestamp)
+            });
+        }
+
+        $scope.addData()
+        $scope.addTime()
+        $state.go('tabs.overview');
+    }
+
+    $scope.submitNoLine = function() {
+        $scope.addData = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                console.log(snapshot.val()[$stateParams.barID]['noline'])
+                $scope.noLineOldVal = snapshot.val()[$stateParams.barID]['noline']
+
+                return firebase.database().ref('Data/' + $stateParams.barID + '/noline').set($scope.noLineOldVal + 1)
+
+            });
+        }
+
+        $scope.addTime = function() {
+            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+                var date = new Date();
+                $scope.date = $filter('date')(new Date(), 'yyyyMMddHH', '-0500');
+                $scope.timestamp = parseInt($scope.date,10)
+                return firebase.database().ref('Data/' + $stateParams.barID + '/lastTimestamp').set($scope.timestamp)
+            });
+        }
+
+        $scope.addData()
+        $scope.addTime()
         $state.go('tabs.overview');
     }
 
     $scope.results = function(name) {
-        console.log(name);
+        //console.log(name);
         $state.go('results', {
             barName:name
         });

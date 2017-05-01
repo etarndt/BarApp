@@ -86,11 +86,11 @@
 
   <script id="templates/overview.html" type="text/ng-template">
     <ion-view title="Overview">
-      <ion-nav-buttons side="right">
-        <button class="button button-icon ion-ios-gear"ng-click="settingsClick()"></button>
-      </ion-nav-buttons>
+      <!--<ion-nav-buttons side="right">-->
+        <!--<button class="button button-icon ion-ios-gear"ng-click="settingsClick()"></button>-->
+      <!--</ion-nav-buttons>-->
       <ion-nav-buttons side="left">
-      <button class="button button-icon ion-ios-search">UW-Madison Campus</button>
+      <button class="button button-icon ion-ios-search">Madison</button>
       </ion-nav-buttons>
       <ion-content>
         <div id="map" data-tap-disabled="true"></div>
@@ -111,31 +111,37 @@
           What bar are you at?
         </div>
         <ion-list>
-          <li class="item" ng-click="line()" ng-value="line">
+          <li class="item" ng-click="line(1)" ng-value="line">
             <div class="row">
             <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
             <div class="col"><h2>The Double U</h2><p> Mon-Sun 11am-2am</p> </div>
             </div>
           </li>
-          <li class="item" ng-click="line()" ng-value="line">
+          <li class="item" ng-click="line(2)" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/Wandos.jpg'> </div>
+              <div class="col"><h2>Wandos</h2><p> Mon-Sun 11am-2am</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line(3)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
               <div class="col"><h2>The Kollege Klub</h2><p> Mon-Sun 11am-2am</p> </div>
             </div>
           </li>
-          <li class="item" ng-click="line()" ng-value="line">
+          <li class="item" ng-click="line(4)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
               <div class="col"><h2>Chasers Bar and Grille</h2><p> Mon-Sun 11am-2am</p> </div>
             </div>
           </li>
-          <li class="item" ng-click="line()" ng-value="line">
+          <li class="item" ng-click="line(5)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
               <div class="col"><h2>Whiskey Jacks Saloon</h2><p> Mon-Sun 11am-2am</p> </div>
             </div>
           </li>
-          <li class="item" ng-click="line()" ng-value="line">
+          <li class="item" ng-click="line(6)" ng-value="line">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
               <div class="col"><h2>The Nitty Gritty</h2><p> Mon-Sun 11am-2am</p> </div>
@@ -158,16 +164,16 @@
         <div class="item item-divider">
           How's the line
         </div>
-        <button class="button button-full button-stable" ng-click="submit()">
-          Very Long
+        <button class="button button-full button-stable" ng-click="submitLong()">
+          Long
         </button>
-        <button class="button button-full button-stable" ng-click="submit()">
-          Kind of Long
+        <button class="button button-full button-stable" ng-click="submitMedium()">
+          Medium
         </button>
-        <button class="button button-full button-stable" ng-click="submit()">
-          Pretty Short
+        <button class="button button-full button-stable" ng-click="submitShort()">
+          Short
         </button>
-        <button class="button button-full button-stable" ng-click="submit()">
+        <button class="button button-full button-stable" ng-click="submitNoLine()">
           No Line
         </button>
 
@@ -194,25 +200,31 @@
         </div>
         <ul class="list">
 
-          <li class="item" ng-click="results('UU')">
+          <li class="item" ng-click="results('Double U')">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
               <div class="col"><h2>The Double U</h2><p> Average wait time is...</p> </div>
             </div>
           </li>
-          <li class="item" ng-click="results('KK')" >
+          <li class="item" ng-click="results('Wandos')" >
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/Wandos.jpg'> </div>
+              <div class="col"><h2>Wandos</h2><p> Average wait time is...</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('The Kollege Klub')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
               <div class="col"><h2>The Kollege Klub</h2><p> Average wait time is...</p> </div>
             </div>
           </li>
-          <li class="item">
+          <li class="item" ng-click="results('Chasers Bar and Grille')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
               <div class="col"><h2>Chasers Bar and Grille</h2><p> Average wait time is...</p> </div>
             </div>
           </li>
-          <li class="item">
+          <li class="item" ng-click="results('Whiskey Jacks Saloon')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
               <div class="col"><h2>Whiskey Jacks Saloon</h2><p> Average wait time is...</p> </div>
