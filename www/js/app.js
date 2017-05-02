@@ -350,8 +350,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
     $scope.closedPost = function() {
 
         var alertPopup = $ionicPopup.alert({
-            title: 'Help',
-            template: 'Cant post-bar closed'
+            title: 'Woops',
+            template: 'The bar is currently closed. Please try again later.'
         });
         alertPopup.then(function(res) {
             console.log('Thank you');
@@ -363,9 +363,158 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             barID: barID
         });
     }
+
+    $scope.addDataTimeAndCheck = function(ID) {
+
+        var closed = 0;
+
+        var amCount = 0;
+        var pmCount = 0;
+
+        var openIsPM = 0;
+        var closeIsPM = 0;
+
+        var fcnCount = 0;
+
+        return firebase.database().ref('Bars').once('value').then(function(snapshot) {
+
+            var counter = 1;
+            $scope.bar_hours = [];
+            $scope.bar_hours = snapshot.val()
+
+            for (i = 0; i < snapshot.numChildren(); i++){
+                if($scope.bar_hours[i+1]['bar'] == $stateParams.barName)
+                    counter = i+1
+            }
+
+            $scope.hours = $scope.bar_hours[ID]['hours'];
+
+
+            $scope.todaysDay = $filter('date')(new Date(), 'EEEE', '-0500');
+            $scope.yesterdaysDay = $filter('date')(new Date(), 'EEEE', '-2900');
+
+            // console.log("todays day: " + $scope.todaysDay);
+            // console.log("yesterdays day: " + $scope.yesterdaysDay);
+
+            $scope.currentDayOpen = $scope.hours[$scope.todaysDay]['Open'];
+            $scope.currentDayClose = $scope.hours[$scope.todaysDay]['Close'];
+
+            $scope.yesterdayDayOpen = $scope.hours[$scope.yesterdaysDay]['Open'];
+            $scope.yesterdayDayClose = $scope.hours[$scope.yesterdaysDay]['Close'];
+
+            // console.log("current day open: " + $scope.currentDayOpen);
+            // console.log("current day close: " + $scope.currentDayClose);
+
+
+            // function to convert number of minutes since 0:00
+            function getMinutes(str) {
+                // split like this cause in DB the format is hh:mm AM/PM
+                var time = str.split(/:| /);
+                fcnCount+=1;
+                if (time[2] == "PM") {
+                    pmCount+=1;
+                    if (fcnCount == 1) {
+                        openIsPM = 1;
+                    }
+                    else {
+                        closeIsPM = 1;
+                    }
+                }
+                else {
+                    amCount++;
+                }
+                return time[0] * 60 + time[1] * 1;
+            }
+
+            // similar function to get curr time in same form to compare with above
+            function getMinutesNow() {
+                var timeNow = new Date();
+                return timeNow.getHours()*60+timeNow.getMinutes();
+            }
+
+            if ($scope.currentDayOpen == "Closed") {
+                closed = 1;
+                console.log("Closed today!")
+                $scope.closedPost();
+            }
+            else {
+                var now = getMinutesNow();
+                // rare case where it's between 12 am and 230 am
+                if (now <= 150) {
+                    if ($scope.yesterdayDayOpen == "Closed") {
+                        closed = 1;
+                        console.log("Still closed!");
+                        $scope.closedPost();
+                    }
+                    else {
+                        // compare minutes of previous day's hours and update now to be full day's minutes
+                        now += getMinutes('24:00 ');
+                        var start = getMinutes($scope.yesterdayDayOpen);
+                        var end = getMinutes($scope.yesterdayDayClose);
+                    }
+                }
+                // after 230 am, thus we know only curr day hours matter
+                else {
+                    var start = getMinutes($scope.currentDayOpen);
+                    var end = getMinutes($scope.currentDayClose);
+                }
+
+
+                // case 1: start time is AM, close time is PM
+                if (amCount == 1 && closeIsPM == 1) {
+                    // rare case where don't want to add if it's between 12:00 PM and 12:59 PM
+                    if (!(end < 780 && end > 660))
+                    end+= getMinutes('12:00 ');
+                }
+                // case 2: start time is AM, close time is AM
+                else if (amCount == 2) {
+                    // rare case if closing time is early in the morning the next day
+                    if (end <= 150)
+                    end+= getMinutes('24:00 ');
+                    else
+                        end+= getMinutes('12:00 ');
+                }
+                // case 3: start time is PM, close time is PM
+                else if (pmCount == 2) {
+                    start += getMinutes('12:00 ');
+                    end += getMinutes('12:00 ');
+                }
+                // case 4: start time is PM, close time is AM
+                else if (amCount == 1 || openIsPM) {
+                    // rare case where don't want to add if it's between 12:00 PM and 12:59 PM
+                    if (!(start < 780 && start > 660))
+                    start += getMinutes('12:00 ');
+
+                    end += getMinutes('12:00 ');
+                }
+
+                // case if start time is still greater than end time
+                if (start >= end) end += getMinutes('12:00 ');
+
+
+                console.log("start: " + start);
+                console.log("end: " + end);
+                console.log("now: " + now);
+
+                if ((now > start) && (now < end)) {
+                    console.log("good to post!");
+                    $scope.addData()
+                    $scope.addTime()
+                }
+                else {
+                    if (closed != 1) {
+                        console.log("not within the right hours. Sorry");
+                        $scope.closedPost();
+                    }
+                }
+            }
+        });
+    }
+
+
     $scope.submitLong = function() {
-        $scope.addData = function() {
-            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+        $scope.addData = function () {
+            return firebase.database().ref('Data').once('value').then(function (snapshot) {
                 console.log(snapshot.val()[$stateParams.barID]['long'])
                 $scope.longOldVal = snapshot.val()[$stateParams.barID]['long']
 
@@ -374,57 +523,17 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addTime = function() {
-            return firebase.database().ref('Data').once('value').then(function(snapshot) {
+        $scope.addTime = function () {
+            return firebase.database().ref('Data').once('value').then(function (snapshot) {
                 var date = new Date();
                 $scope.date = $filter('date')(new Date(), 'yyyyMMddHH', '-0500');
-                $scope.timestamp = parseInt($scope.date,10)
+                $scope.timestamp = parseInt($scope.date, 10)
                 return firebase.database().ref('Data/' + $stateParams.barID + '/lastTimestamp').set($scope.timestamp)
             });
         }
 
-        // $scope.addDataTimeAndCheck = function() {
-        //
-        //     return firebase.database().ref('Bars').once('value').then(function(snapshot) {
-        //
-        //         var counter = 1;
-        //         $scope.bar_hours = [];
-        //         $scope.bar_hours = snapshot.val()
-        //
-        //         for (i = 0; i < snapshot.numChildren(); i++){
-        //             if($scope.bar_hours[i+1]['bar'] == $stateParams.barName)
-        //                 counter = i+1
-        //         }
-        //
-        //         $scope.hours = $scope.bar_hours[counter]['hours'];
-        //
-        //         $scope.todaysDay = $filter('date')(new Date(), 'EEEE', '-0500');
-        //         $scope.yesterdaysDay = $filter('date')(new Date(), 'EEEE', '-2900');
-        //
-        //
-        //         $scope.currentDayOpen = $scope.hours[$scope.todaysDay]['Open']
-        //         $scope.currentDayClose = $scope.hours[$scope.todaysDay]['Close']
-        //
-        //         $scope.yesterdayClose = $scope.hours[$scope.yesterdaysDay]['Close']
-        //
-        //         $scope.currTime = $filter('date')(new Date(), 'h', '-0500');
-        //         $scope.currnTime = $filter('date')(new Date(), 'h', '-0400');
-        //
-        //     });
-        //     if ($scope.currentDayOpen == "Closed") {
-        //         if ($scope.yesterdayClose == "Closed") {
-        //             $scope.closedPost()
-        //         }
-        //     } else {
-        //         $scope.addData()
-        //         $scope.addTime()
-        //     }
-        // }
+        $scope.addDataTimeAndCheck($stateParams.barID);
 
-        // $scope.addDataTimeAndCheck();
-
-        $scope.addData()
-        $scope.addTime()
         $state.go('tabs.overview');
     }
 
@@ -448,8 +557,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addData()
-        $scope.addTime()
+        $scope.addDataTimeAndCheck($stateParams.barID);
+
         $state.go('tabs.overview');
     }
 
@@ -473,8 +582,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addData()
-        $scope.addTime()
+        $scope.addDataTimeAndCheck($stateParams.barID);
+
         $state.go('tabs.overview');
     }
 
@@ -498,8 +607,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addData()
-        $scope.addTime()
+        $scope.addDataTimeAndCheck($stateParams.barID);
+
         $state.go('tabs.overview');
     }
 
