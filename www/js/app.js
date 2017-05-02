@@ -140,14 +140,17 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
 
             // Geo Location /
             navigator.geolocation.getCurrentPosition(function(pos) {
-                map.setCenter(new google.maps.LatLng(43.072932, -89.396565));
+                // map.setCenter(new google.maps.LatLng(43.072932, -89.396565));
+                var currPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+                map.setCenter(currPos);
                 var myLocation = new google.maps.Marker({
-                    position: new google.maps.LatLng(43.072932, -89.396565),
+                    // position: new google.maps.LatLng(43.072932, -89.396565),
+                    position: currPos,
                     map: map,
-                    animation: google.maps.Animation.DROP,
+                    // animation: google.maps.Animation.DROP,
                     title: "My Location",
-                    content: "hardcoded at Grainger"
-
+                    content: "hardcoded at Grainger",
+                    icon: 'http://www.robotwoods.com/dev/misc/bluecircle.png'
                 });
                 google.maps.event.addListener(myLocation, 'click', function(){
                     infoWindow.setContent('<h2>' + myLocation.title + '</h2>' + myLocation.content);
@@ -162,7 +165,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(info.lat, info.long),
                     map: $scope.map,
-                    animation: google.maps.Animation.DROP,
+                    // animation: google.maps.Animation.DROP,
                     title: info.bar,
                     icon: "img/" + info.icon
                 });
