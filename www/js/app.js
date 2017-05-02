@@ -597,6 +597,7 @@ barApp.controller('summaryCtrl', function($scope, $state, $cordovaGeolocation, $
                     counter = i+1
             }
 
+
             $scope.waitDoubleU = bar_stats[1]['Line_length'];
             $scope.waitWandos = bar_stats[2]['Line_length'];
             $scope.waitKK = bar_stats[3]['Line_length'];
@@ -605,7 +606,103 @@ barApp.controller('summaryCtrl', function($scope, $state, $cordovaGeolocation, $
             $scope.waitNitty = bar_stats[6]['Line_length'];
 
 
+            //Double U Progress Bar
+            $scope.percentageDoubleU = 0;
+            if(bar_stats[1]['Line_length']=='no line'){
+                $scope.percentageDoubleU = 0;
+            }
+            if(bar_stats[1]['Line_length']=='short'){
+                $scope.percentageDoubleU = 25;
+            }
+            if(bar_stats[1]['Line_length']=='medium'){
+                $scope.percentageDoubleU = 75;
+            }
+            if(bar_stats[1]['Line_length']=='long'){
+                $scope.percentageDoubleU = 100;
+            }
+
+
+            //Wando'sProgress Bar
+            $scope.percentageWandos= 0;
+            if(bar_stats[2]['Line_length']=='no line'){
+                $scope.percentageWandos = 0;
+            }
+            if(bar_stats[2]['Line_length']=='short'){
+                $scope.percentageWandos = 25;
+            }
+            if(bar_stats[2]['Line_length']=='medium'){
+                $scope.percentageWandos = 75;
+            }
+            if(bar_stats[2]['Line_length']=='long'){
+                $scope.percentageWandos = 100;
+            }
+
+
+            //KK Progress Bar
+            $scope.percentageKK = 0;
+            if(bar_stats[3]['Line_length']=='no line'){
+                $scope.percentageKK = 0;
+            }
+            if(bar_stats[3]['Line_length']=='short'){
+                $scope.percentageKK = 25;
+            }
+            if(bar_stats[3]['Line_length']=='medium'){
+                $scope.percentageKK = 75;
+            }
+            if(bar_stats[3]['Line_length']=='long'){
+                $scope.percentageKK = 100;
+            }
+
+
+            //Chasers Progress Bar
+            $scope.percentageChasers = 0;
+            if(bar_stats[4]['Line_length']=='no line'){
+                $scope.percentageChasers = 0;
+            }
+            if(bar_stats[4]['Line_length']=='short'){
+                $scope.percentageChasers = 25;
+            }
+            if(bar_stats[4]['Line_length']=='medium'){
+                $scope.percentageChasers = 75;
+            }
+            if(bar_stats[4]['Line_length']=='long'){
+                $scope.percentageChasers = 100;
+            }
+
+
+            //Whiskeys Progress Bar
+            $scope.percentageWhiskeys = 0;
+            if(bar_stats[5]['Line_length']=='no line'){
+                $scope.percentageWhiskeys = 0;
+            }
+            if(bar_stats[5]['Line_length']=='short'){
+                $scope.percentageWhiskeys = 25;
+            }
+            if(bar_stats[5]['Line_length']=='medium'){
+                $scope.percentageWhiskeys = 75;
+            }
+            if(bar_stats[5]['Line_length']=='long'){
+                $scope.percentageWhiskeys = 100;
+            }
+
+            //Nitty Progress Bar
+            $scope.percentageNitty= 0;
+            if(bar_stats[6]['Line_length']=='no line'){
+                $scope.percentageNitty = 0;
+            }
+            if(bar_stats[6]['Line_length']=='short'){
+                $scope.percentageNitty = 25;
+            }
+            if(bar_stats[6]['Line_length']=='medium'){
+                $scope.percentageNitty = 75;
+            }
+            if(bar_stats[6]['Line_length']=='long'){
+                $scope.percentageNitty = 100;
+            }
+
+
         });
+
 
 
 

@@ -181,52 +181,81 @@
     </ion-view>
   </script>
 
-  <script id="templates/summary.html" type="text/ng-template">
+  <script id="templates/summary.html" type="text/ng-template" ng-controller="rangeCtrl">
     <ion-view title="Summary">
       <h1>Summary</h1>
       <ion-nav-buttons side="right">
         <button class="button button-icon ion-help"ng-click="help()"></button>
       </ion-nav-buttons>
       <ion-content>
+
         <div class="item item-divider">
           Bar times
-        </div>
+        </div
+
         <ul class="list">
 
           <li class="item" ng-click="results('Double U')">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
-              <div class="col"><h2>The Double U</h2><p> Average wait time is...{{waitDoubleU}}</p> </div>
+              <div class="col">
+                <h2>The Double U</h2>
+                <p> Average wait time is...<b>{{waitDoubleU}}</b></p>
+                <progress  max="100" value={{percentageDoubleU}}></progress>
+              </div>
+
             </div>
+
+
           </li>
           <li class="item" ng-click="results('Wandos')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/wandos2.jpg'> </div>
-              <div class="col"><h2>Wandos</h2><p> Average wait time is...{{waitWandos}}</p> </div>
+              <div class="col">
+                <h2>Wandos</h2>
+                <p> Average wait time is...<b>{{waitWandos}}</b></p>
+                <progress  max="100" value={{percentageWandos}}></progress>
+              </div>
             </div>
           </li>
           <li class="item" ng-click="results('The Kollege Klub')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
-              <div class="col"><h2>The Kollege Klub</h2><p> Average wait time is...{{waitKK}}</p> </div>
+              <div class="col">
+                <h2>The Kollege Klub</h2>
+                <p> Average wait time is...<b>{{waitKK}}</b></p>
+                <progress  max="100" value={{percentageKK}}></progress>
+              </div>
             </div>
           </li>
           <li class="item" ng-click="results('Chasers Bar and Grille')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
-              <div class="col"><h2>Chasers Bar and Grille</h2><p> Average wait time is...{{waitChasers}}</p> </div>
+              <div class="col">
+                <h2>Chasers Bar and Grille</h2>
+                <p> Average wait time is...<b>{{waitChasers}}</b></p>
+                <progress  max="100" value={{percentageChasers}}></progress>
+              </div>
             </div>
           </li>
           <li class="item" ng-click="results('Whiskey Jacks Saloon')" >
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
-              <div class="col"><h2>Whiskey Jacks Saloon</h2><p> Average wait time is...{{waitWhiskeys}}</p> </div>
+              <div class="col">
+                <h2>Whiskey Jacks Saloon</h2>
+                <p> Average wait time is...<b>{{waitWhiskeys}}</b></p>
+                <progress  max="100" value={{percentageWhiskeys}}></progress>
+              </div>
             </div>
           </li>
           <li class="item" ng-click="results('Nitty Gritty')">
             <div class="row">
               <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
-              <div class="col"><h2>The Nitty Gritty</h2><p> Average wait time is...{{waitNitty}}</p> </div>
+              <div class="col">
+                <h2>The Nitty Gritty</h2>
+                <p> Average wait time is...<b>{{waitNitty}}</b></p>
+                <progress  max="100" value={{percentageNitty}}></progress>
+              </div>
             </div>
           </li>
         </ul>
@@ -242,38 +271,65 @@
       <ion-nav-buttons side="left">
         <button class="button button-icon ion-ios-arrow-back"ng-click="back()"></button>
       </ion-nav-buttons>
+
+
       <ion-content>
-        <h2>The line at {{name}} is ... {{length}}</h2>
-        <table style="width:50%">
-          <tr>
-            <td>Monday</td>
-            <td>{{mondayHours}}</td>
-          </tr>
-          <tr>
-            <td>Tuesday</td>
-            <td>{{tuesdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Wednesday</td>
-            <td>{{wednesdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Thursday</td>
-            <td>{{thursdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Friday</td>
-            <td>{{fridayHours}}</td>
-          </tr>
-          <tr>
-            <td>Saturday</td>
-            <td>{{saturdayHours}}</td>
-          </tr>
-          <tr>
-            <td>Sunday</td>
-            <td>{{sundayHours}}</td>
-          </tr>
-        </table>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+            <div class="col col-50"><h3>Monday</h3></div>
+            <div> <p> {{mondayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Tuesday</h3></div>
+              <div> <p> {{tuesdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Wednesday</h3></div>
+              <div> <p> {{wednesdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Thursday</h3></div>
+              <div> <p> {{thursdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Friday</h3></div>
+              <div> <p> {{fridayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Saturday</h3></div>
+              <div> <p> {{saturdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Sunday</h3></div>
+              <div> <p> {{sundayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
       </ion-content>
     </ion-view>
   </script>
