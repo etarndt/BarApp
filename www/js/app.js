@@ -258,13 +258,62 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
             $scope.hours = $scope.bar_hours[counter]['hours'];
 
 
-            $scope.mondayHours = $scope.hours['Monday']
-            $scope.tuesdayHours = $scope.hours['Tuesday']
-            $scope.wednesdayHours = $scope.hours['Wednesday']
-            $scope.thursdayHours = $scope.hours['Thursday']
-            $scope.fridayHours = $scope.hours['Friday']
-            $scope.saturdayHours = $scope.hours['Saturday']
-            $scope.sundayHours = $scope.hours['Sunday']
+            $scope.mondayOpen = $scope.hours['Monday']['Open']
+            $scope.mondayClose = $scope.hours['Monday']['Close']
+            $scope.tuesdayOpen = $scope.hours['Tuesday']['Open']
+            $scope.tuesdayClose = $scope.hours['Tuesday']['Close']
+            $scope.wednesdayOpen = $scope.hours['Wednesday']['Open']
+            $scope.wednesdayClose = $scope.hours['Wednesday']['Close']
+            $scope.thursdayOpen = $scope.hours['Thursday']['Open']
+            $scope.thursdayClose = $scope.hours['Thursday']['Close']
+            $scope.fridayOpen = $scope.hours['Friday']['Open']
+            $scope.fridayClose = $scope.hours['Friday']['Close']
+            $scope.saturdayOpen = $scope.hours['Saturday']['Open']
+            $scope.saturdayClose = $scope.hours['Saturday']['Close']
+            $scope.sundayOpen = $scope.hours['Sunday']['Open']
+            $scope.sundayClose = $scope.hours['Sunday']['Close']
+
+            if ($scope.mondayOpen == "Closed") {
+                $scope.mondayHours = "Closed"
+            } else {
+                $scope.mondayHours = $scope.mondayOpen + "-" + $scope.mondayClose
+            }
+
+            if ($scope.tuesdayOpen == "Closed") {
+                $scope.tuesdayHours = "Closed"
+            } else {
+                $scope.tuesdayHours = $scope.tuesdayOpen + "-" + $scope.tuesdayClose
+            }
+
+            if ($scope.wednesdayOpen == "Closed") {
+                $scope.wednesdayHours = "Closed"
+            } else {
+                $scope.wednesdayHours = $scope.wednesdayOpen + "-" + $scope.wednesdayClose
+            }
+
+            if ($scope.thursdayOpen == "Closed") {
+                $scope.thursdayHours = "Closed"
+            } else {
+                $scope.thursdayHours = $scope.thursdayOpen + "-" + $scope.thursdayClose
+            }
+
+            if ($scope.fridayOpen == "Closed") {
+                $scope.fridayHours = "Closed"
+            } else {
+                $scope.fridayHours = $scope.fridayOpen + "-" + $scope.fridayClose
+            }
+
+            if ($scope.saturdayOpen == "Closed") {
+                $scope.saturdayHours = "Closed"
+            } else {
+                $scope.saturdayHours = $scope.saturdayOpen + "-" + $scope.saturdayClose
+            }
+
+            if ($scope.sundayOpen == "Closed") {
+                $scope.sundayHours = "Closed"
+            } else {
+                $scope.sundayHours = $scope.sundayOpen + "-" + $scope.sundayClose
+            }
 
 
         });
@@ -298,6 +347,17 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
         });
     }
 
+    $scope.closedPost = function() {
+
+        var alertPopup = $ionicPopup.alert({
+            title: 'Help',
+            template: 'Cant post-bar closed'
+        });
+        alertPopup.then(function(res) {
+            console.log('Thank you');
+        });
+    }
+
     $scope.line = function(barID) {
         $state.go('line', {
             barID: barID
@@ -322,6 +382,46 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
                 return firebase.database().ref('Data/' + $stateParams.barID + '/lastTimestamp').set($scope.timestamp)
             });
         }
+
+        // $scope.addDataTimeAndCheck = function() {
+        //
+        //     return firebase.database().ref('Bars').once('value').then(function(snapshot) {
+        //
+        //         var counter = 1;
+        //         $scope.bar_hours = [];
+        //         $scope.bar_hours = snapshot.val()
+        //
+        //         for (i = 0; i < snapshot.numChildren(); i++){
+        //             if($scope.bar_hours[i+1]['bar'] == $stateParams.barName)
+        //                 counter = i+1
+        //         }
+        //
+        //         $scope.hours = $scope.bar_hours[counter]['hours'];
+        //
+        //         $scope.todaysDay = $filter('date')(new Date(), 'EEEE', '-0500');
+        //         $scope.yesterdaysDay = $filter('date')(new Date(), 'EEEE', '-2900');
+        //
+        //
+        //         $scope.currentDayOpen = $scope.hours[$scope.todaysDay]['Open']
+        //         $scope.currentDayClose = $scope.hours[$scope.todaysDay]['Close']
+        //
+        //         $scope.yesterdayClose = $scope.hours[$scope.yesterdaysDay]['Close']
+        //
+        //         $scope.currTime = $filter('date')(new Date(), 'h', '-0500');
+        //         $scope.currnTime = $filter('date')(new Date(), 'h', '-0400');
+        //
+        //     });
+        //     if ($scope.currentDayOpen == "Closed") {
+        //         if ($scope.yesterdayClose == "Closed") {
+        //             $scope.closedPost()
+        //         }
+        //     } else {
+        //         $scope.addData()
+        //         $scope.addTime()
+        //     }
+        // }
+
+        // $scope.addDataTimeAndCheck();
 
         $scope.addData()
         $scope.addTime()
@@ -413,12 +513,59 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             $scope.todaysDay = $filter('date')(new Date(), 'EEEE', '-0500');
 
             // $scope.todaysHoursField = $scope.hours[$scope.todaysDay]
-            $scope.todaysHoursDoubleU = $scope.bar_hours[1]['hours'][$scope.todaysDay];
-            $scope.todaysHoursWandos = $scope.bar_hours[2]['hours'][$scope.todaysDay];
-            $scope.todaysHoursKK = $scope.bar_hours[3]['hours'][$scope.todaysDay];
-            $scope.todaysHoursChasers = $scope.bar_hours[4]['hours'][$scope.todaysDay];
-            $scope.todaysHoursWhiskeys = $scope.bar_hours[5]['hours'][$scope.todaysDay];
-            $scope.todaysHoursNitty = $scope.bar_hours[6]['hours'][$scope.todaysDay];
+
+
+            $scope.todaysOpenDoubleU = $scope.bar_hours[1]['hours'][$scope.todaysDay]["Open"];
+            $scope.todaysCloseDoubleU = $scope.bar_hours[1]['hours'][$scope.todaysDay]["Close"];
+            $scope.todaysOpenWandos = $scope.bar_hours[2]['hours'][$scope.todaysDay]["Open"];
+            $scope.todaysCloseWandos = $scope.bar_hours[2]['hours'][$scope.todaysDay]["Close"];
+            $scope.todaysOpenKK = $scope.bar_hours[3]['hours'][$scope.todaysDay]["Open"];
+            $scope.todaysCloseKK = $scope.bar_hours[3]['hours'][$scope.todaysDay]["Close"];
+            $scope.todaysOpenChasers = $scope.bar_hours[4]['hours'][$scope.todaysDay]["Open"];
+            $scope.todaysCloseChasers = $scope.bar_hours[4]['hours'][$scope.todaysDay]["Close"];
+            $scope.todaysOpenWhiskeys = $scope.bar_hours[5]['hours'][$scope.todaysDay]["Open"];
+            $scope.todaysCloseWhiskeys = $scope.bar_hours[5]['hours'][$scope.todaysDay]["Close"];
+            $scope.todaysOpenNitty = $scope.bar_hours[6]['hours'][$scope.todaysDay]["Open"];
+            $scope.todaysCloseNitty = $scope.bar_hours[6]['hours'][$scope.todaysDay]["Close"];
+
+
+            if ($scope.todaysOpenDoubleU == "Closed") {
+                $scope.todaysHoursDoubleU = $scope.todaysOpenDoubleU
+            } else {
+                $scope.todaysHoursDoubleU = $scope.todaysOpenDoubleU + "-" + $scope.todaysCloseDoubleU
+            }
+
+            if ($scope.todaysOpenWandos == "Closed") {
+                $$scope.todaysHoursWandos = $scope.todaysOpenDoubleU
+            } else {
+                $scope.todaysHoursWandos = $scope.todaysOpenWandos + "-" + $scope.todaysCloseWandos
+            }
+
+            if ($scope.todaysOpenKK == "Closed") {
+                $scope.todaysHoursKK = $scope.todaysOpenDoubleU
+            } else {
+                $scope.todaysHoursKK = $scope.todaysOpenKK + "-" + $scope.todaysCloseKK
+            }
+
+            if ($scope.todaysOpenChasers == "Closed") {
+                $scope.todaysHoursChasers = $scope.todaysOpenDoubleU
+            } else {
+                $scope.todaysHoursChasers = $scope.todaysOpenChasers + "-" + $scope.todaysCloseChasers
+            }
+
+            if ($scope.todaysOpenWhiskeys == "Closed") {
+                $scope.todaysHoursWhiskeys = $scope.todaysOpenDoubleU
+            } else {
+                $scope.todaysHoursWhiskeys = $scope.todaysOpenWhiskeys + "-" + $scope.todaysCloseWhiskeys
+            }
+
+            if ($scope.todaysOpenNitty == "Closed") {
+                $scope.todaysHoursNitty = $scope.todaysOpenDoubleU
+            } else {
+                $scope.todaysHoursNitty = $scope.todaysOpenNitty + "-" + $scope.todaysCloseNitty
+            }
+
+
 
         });
     }
