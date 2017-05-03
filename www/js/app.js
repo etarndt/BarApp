@@ -90,7 +90,8 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
     });
 
 
-    barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation) {
+    barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation, $window) {
+
         var options = {timeout: 10000, enableHighAccuracy: true};
 
         // keep for testing
@@ -337,6 +338,10 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
 barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter) {
     $scope.back = function() {
         $state.go('tabs.overview');
+    }
+
+    $scope.backToCreateNew = function() {
+        $state.go('tabs.add');
     }
 
     $scope.help = function() {
