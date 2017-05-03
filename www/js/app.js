@@ -707,8 +707,156 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
 
 barApp.controller('summaryCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter) {
 
-    $scope.retrieve_data = function() {
+    $scope.isBarOpen = function(ID) {
 
+        var closed = 0;
+
+        var amCount = 0;
+        var pmCount = 0;
+
+        var openIsPM = 0;
+        var closeIsPM = 0;
+
+        var fcnCount = 0;
+
+        $scope.dog = firebase.database().ref('Bars').once('value').then(function(snapshot) {
+
+            var counter = 1;
+            $scope.bar_hours = [];
+            $scope.bar_hours = snapshot.val()
+
+            for (i = 0; i < snapshot.numChildren(); i++){
+                if($scope.bar_hours[i+1]['bar'] == $stateParams.barName)
+                    counter = i+1
+            }
+
+            $scope.hours = $scope.bar_hours[ID]['hours'];
+
+
+            $scope.todaysDay = $filter('date')(new Date(), 'EEEE', '-0500');
+            $scope.yesterdaysDay = $filter('date')(new Date(), 'EEEE', '-2900');
+
+            // console.log("todays day: " + $scope.todaysDay);
+            // console.log("yesterdays day: " + $scope.yesterdaysDay);
+
+            $scope.currentDayOpen = $scope.hours[$scope.todaysDay]['Open'];
+            $scope.currentDayClose = $scope.hours[$scope.todaysDay]['Close'];
+
+            $scope.yesterdayDayOpen = $scope.hours[$scope.yesterdaysDay]['Open'];
+            $scope.yesterdayDayClose = $scope.hours[$scope.yesterdaysDay]['Close'];
+
+            // console.log("current day open: " + $scope.currentDayOpen);
+            // console.log("current day close: " + $scope.currentDayClose);
+
+
+            // function to convert number of minutes since 0:00
+            function getMinutes(str) {
+                // split like this cause in DB the format is hh:mm AM/PM
+                var time = str.split(/:| /);
+                fcnCount+=1;
+                if (time[2] == "PM") {
+                    pmCount+=1;
+                    if (fcnCount == 1) {
+                        openIsPM = 1;
+                    }
+                    else {
+                        closeIsPM = 1;
+                    }
+                }
+                else {
+                    amCount++;
+                }
+                return time[0] * 60 + time[1] * 1;
+            }
+
+            // similar function to get curr time in same form to compare with above
+            function getMinutesNow() {
+                var timeNow = new Date();
+                return timeNow.getHours()*60+timeNow.getMinutes();
+            }
+
+            if ($scope.currentDayOpen == "Closed") {
+                closed = 1;
+                console.log("Closed today!")
+                return 0
+            }
+            else {
+                var now = getMinutesNow();
+                // rare case where it's between 12 am and 230 am
+                if (now <= 150) {
+                    if ($scope.yesterdayDayOpen == "Closed") {
+                        closed = 1;
+                        console.log("Still closed!");
+                        return 0
+                    }
+                    else {
+                        // compare minutes of previous day's hours and update now to be full day's minutes
+                        now += getMinutes('24:00 ');
+                        var start = getMinutes($scope.yesterdayDayOpen);
+                        var end = getMinutes($scope.yesterdayDayClose);
+                    }
+                }
+                // after 230 am, thus we know only curr day hours matter
+                else {
+                    var start = getMinutes($scope.currentDayOpen);
+                    var end = getMinutes($scope.currentDayClose);
+                }
+
+
+                // case 1: start time is AM, close time is PM
+                if (amCount == 1 && closeIsPM == 1) {
+                    // rare case where don't want to add if it's between 12:00 PM and 12:59 PM
+                    if (!(end < 780 && end > 660))
+                        end+= getMinutes('12:00 ');
+                }
+                // case 2: start time is AM, close time is AM
+                else if (amCount == 2) {
+                    // rare case if closing time is early in the morning the next day
+                    if (end <= 150)
+                        end+= getMinutes('24:00 ');
+                    else
+                        end+= getMinutes('12:00 ');
+                }
+                // case 3: start time is PM, close time is PM
+                else if (pmCount == 2) {
+                    start += getMinutes('12:00 ');
+                    end += getMinutes('12:00 ');
+                }
+                // case 4: start time is PM, close time is AM
+                else if (amCount == 1 || openIsPM) {
+                    // rare case where don't want to add if it's between 12:00 PM and 12:59 PM
+                    if (!(start < 780 && start > 660))
+                        start += getMinutes('12:00 ');
+
+                    end += getMinutes('12:00 ');
+                }
+
+                // case if start time is still greater than end time
+                if (start >= end) end += getMinutes('12:00 ');
+
+
+                console.log("start: " + start);
+                console.log("end: " + end);
+                console.log("now: " + now);
+
+                if ((now > start) && (now < end)) {
+                    console.log("good to post!");
+                    return 1
+                }
+                else {
+                    if (closed != 1) {
+                        console.log("not within the right hours. Sorry");
+                        return 0
+                    }
+                }
+            }
+        });
+        return $scope.dog
+    };
+
+    // console.log($scope.isBarOpen(1))
+
+    $scope.retrieve_data = function() {
 
         return firebase.database().ref('Data').once('value').then(function(snapshot) {
 
@@ -721,108 +869,251 @@ barApp.controller('summaryCtrl', function($scope, $state, $cordovaGeolocation, $
                     counter = i+1
             }
 
+            $scope.isBarOpen(1).then(function(res){
+                // console.log(res)
+                if (res == 1) {
+                    $scope.waitDoubleU = bar_stats[1]['Line_length'];
+                    //Double U Progress Bar
+                    $scope.percentageDoubleU = 0;
+                    if(bar_stats[1]['Line_length']=='no line'){
+                        $scope.percentageDoubleU = 0;
+                    }
+                    if(bar_stats[1]['Line_length']=='short'){
+                        $scope.percentageDoubleU = 25;
+                    }
+                    if(bar_stats[1]['Line_length']=='medium'){
+                        $scope.percentageDoubleU = 75;
+                    }
+                    if(bar_stats[1]['Line_length']=='long'){
+                        $scope.percentageDoubleU = 100;
+                    }
+                } else {
+                    $scope.waitDoubleU = "Closed"
+                    $scope.percentageDoubleU = 0;
+                }
+            })
 
-            $scope.waitDoubleU = bar_stats[1]['Line_length'];
-            $scope.waitWandos = bar_stats[2]['Line_length'];
-            $scope.waitKK = bar_stats[3]['Line_length'];
-            $scope.waitChasers = bar_stats[4]['Line_length'];
-            $scope.waitWhiskeys = bar_stats[5]['Line_length'];
-            $scope.waitNitty = bar_stats[6]['Line_length'];
+            $scope.isBarOpen(2).then(function(res){
+                // console.log(res)
+                if (res == 1) {
+                    $scope.waitWandos = bar_stats[2]['Line_length'];
+                    //Wando'sProgress Bar
+                    $scope.percentageWandos= 0;
+                    if(bar_stats[2]['Line_length']=='no line'){
+                        $scope.percentageWandos = 0;
+                    }
+                    if(bar_stats[2]['Line_length']=='short'){
+                        $scope.percentageWandos = 25;
+                    }
+                    if(bar_stats[2]['Line_length']=='medium'){
+                        $scope.percentageWandos = 75;
+                    }
+                    if(bar_stats[2]['Line_length']=='long'){
+                        $scope.percentageWandos = 100;
+                    }
+                } else {
+                    $scope.waitWandos = "Closed"
+                    $scope.percentageWandos= 0;
+                }
+            })
+
+            $scope.isBarOpen(3).then(function(res){
+                // console.log(res)
+                if (res == 1) {
+                    $scope.waitKK = bar_stats[3]['Line_length'];
+                    //KK Progress Bar
+                    $scope.percentageKK = 0;
+                    if(bar_stats[3]['Line_length']=='no line'){
+                        $scope.percentageKK = 0;
+                    }
+                    if(bar_stats[3]['Line_length']=='short'){
+                        $scope.percentageKK = 25;
+                    }
+                    if(bar_stats[3]['Line_length']=='medium'){
+                        $scope.percentageKK = 75;
+                    }
+                    if(bar_stats[3]['Line_length']=='long'){
+                        $scope.percentageKK = 100;
+                    }
+                } else {
+                    $scope.waitKK = "Closed"
+                    $scope.percentageKK = 0;
+                }
+            })
+
+            $scope.isBarOpen(4).then(function(res){
+                // console.log(res)
+                if (res == 1) {
+                    $scope.waitChasers = bar_stats[4]['Line_length'];
+                    //Chasers Progress Bar
+                    $scope.percentageChasers = 0;
+                    if(bar_stats[4]['Line_length']=='no line'){
+                        $scope.percentageChasers = 0;
+                    }
+                    if(bar_stats[4]['Line_length']=='short'){
+                        $scope.percentageChasers = 25;
+                    }
+                    if(bar_stats[4]['Line_length']=='medium'){
+                        $scope.percentageChasers = 75;
+                    }
+                    if(bar_stats[4]['Line_length']=='long'){
+                        $scope.percentageChasers = 100;
+                    }
+                } else {
+                    $scope.waitChasers = "Closed"
+                    $scope.percentageChasers = 0;
+                }
+            })
+
+            $scope.isBarOpen(5).then(function(res){
+                // console.log(res)
+                if (res == 1) {
+                    $scope.waitWhiskeys = bar_stats[5]['Line_length'];
+                    //Whiskeys Progress Bar
+                    $scope.percentageWhiskeys = 0;
+                    if(bar_stats[5]['Line_length']=='no line'){
+                        $scope.percentageWhiskeys = 0;
+                    }
+                    if(bar_stats[5]['Line_length']=='short'){
+                        $scope.percentageWhiskeys = 25;
+                    }
+                    if(bar_stats[5]['Line_length']=='medium'){
+                        $scope.percentageWhiskeys = 75;
+                    }
+                    if(bar_stats[5]['Line_length']=='long'){
+                        $scope.percentageWhiskeys = 100;
+                    }
+                } else {
+                    $scope.waitWhiskeys = "Closed"
+                    $scope.percentageWhiskeys = 0;
+                }
+            })
+
+            $scope.isBarOpen(6).then(function(res){
+                // console.log(res)
+                if (res == 1) {
+                    $scope.waitNitty = bar_stats[6]['Line_length'];
+                    //Nitty Progress Bar
+                    $scope.percentageNitty= 0;
+                    if(bar_stats[6]['Line_length']=='no line'){
+                        $scope.percentageNitty = 0;
+                    }
+                    if(bar_stats[6]['Line_length']=='short'){
+                        $scope.percentageNitty = 25;
+                    }
+                    if(bar_stats[6]['Line_length']=='medium'){
+                        $scope.percentageNitty = 75;
+                    }
+                    if(bar_stats[6]['Line_length']=='long'){
+                        $scope.percentageNitty = 100;
+                    }
+                } else {
+                    $scope.waitNitty = "Closed"
+                    $scope.percentageNitty= 0;
+                }
+            })
+
+            // $scope.waitDoubleU = bar_stats[1]['Line_length'];
+            // $scope.waitWandos = bar_stats[2]['Line_length'];
+            // $scope.waitKK = bar_stats[3]['Line_length'];
+            // $scope.waitChasers = bar_stats[4]['Line_length'];
+            // $scope.waitWhiskeys = bar_stats[5]['Line_length'];
+            // $scope.waitNitty = bar_stats[6]['Line_length'];
 
 
-            //Double U Progress Bar
-            $scope.percentageDoubleU = 0;
-            if(bar_stats[1]['Line_length']=='no line'){
-                $scope.percentageDoubleU = 0;
-            }
-            if(bar_stats[1]['Line_length']=='short'){
-                $scope.percentageDoubleU = 25;
-            }
-            if(bar_stats[1]['Line_length']=='medium'){
-                $scope.percentageDoubleU = 75;
-            }
-            if(bar_stats[1]['Line_length']=='long'){
-                $scope.percentageDoubleU = 100;
-            }
-
-
-            //Wando'sProgress Bar
-            $scope.percentageWandos= 0;
-            if(bar_stats[2]['Line_length']=='no line'){
-                $scope.percentageWandos = 0;
-            }
-            if(bar_stats[2]['Line_length']=='short'){
-                $scope.percentageWandos = 25;
-            }
-            if(bar_stats[2]['Line_length']=='medium'){
-                $scope.percentageWandos = 75;
-            }
-            if(bar_stats[2]['Line_length']=='long'){
-                $scope.percentageWandos = 100;
-            }
-
-
-            //KK Progress Bar
-            $scope.percentageKK = 0;
-            if(bar_stats[3]['Line_length']=='no line'){
-                $scope.percentageKK = 0;
-            }
-            if(bar_stats[3]['Line_length']=='short'){
-                $scope.percentageKK = 25;
-            }
-            if(bar_stats[3]['Line_length']=='medium'){
-                $scope.percentageKK = 75;
-            }
-            if(bar_stats[3]['Line_length']=='long'){
-                $scope.percentageKK = 100;
-            }
-
-
-            //Chasers Progress Bar
-            $scope.percentageChasers = 0;
-            if(bar_stats[4]['Line_length']=='no line'){
-                $scope.percentageChasers = 0;
-            }
-            if(bar_stats[4]['Line_length']=='short'){
-                $scope.percentageChasers = 25;
-            }
-            if(bar_stats[4]['Line_length']=='medium'){
-                $scope.percentageChasers = 75;
-            }
-            if(bar_stats[4]['Line_length']=='long'){
-                $scope.percentageChasers = 100;
-            }
-
-
-            //Whiskeys Progress Bar
-            $scope.percentageWhiskeys = 0;
-            if(bar_stats[5]['Line_length']=='no line'){
-                $scope.percentageWhiskeys = 0;
-            }
-            if(bar_stats[5]['Line_length']=='short'){
-                $scope.percentageWhiskeys = 25;
-            }
-            if(bar_stats[5]['Line_length']=='medium'){
-                $scope.percentageWhiskeys = 75;
-            }
-            if(bar_stats[5]['Line_length']=='long'){
-                $scope.percentageWhiskeys = 100;
-            }
-
-            //Nitty Progress Bar
-            $scope.percentageNitty= 0;
-            if(bar_stats[6]['Line_length']=='no line'){
-                $scope.percentageNitty = 0;
-            }
-            if(bar_stats[6]['Line_length']=='short'){
-                $scope.percentageNitty = 25;
-            }
-            if(bar_stats[6]['Line_length']=='medium'){
-                $scope.percentageNitty = 75;
-            }
-            if(bar_stats[6]['Line_length']=='long'){
-                $scope.percentageNitty = 100;
-            }
+            // //Double U Progress Bar
+            // $scope.percentageDoubleU = 0;
+            // if(bar_stats[1]['Line_length']=='no line'){
+            //     $scope.percentageDoubleU = 0;
+            // }
+            // if(bar_stats[1]['Line_length']=='short'){
+            //     $scope.percentageDoubleU = 25;
+            // }
+            // if(bar_stats[1]['Line_length']=='medium'){
+            //     $scope.percentageDoubleU = 75;
+            // }
+            // if(bar_stats[1]['Line_length']=='long'){
+            //     $scope.percentageDoubleU = 100;
+            // }
+            //
+            //
+            // //Wando'sProgress Bar
+            // $scope.percentageWandos= 0;
+            // if(bar_stats[2]['Line_length']=='no line'){
+            //     $scope.percentageWandos = 0;
+            // }
+            // if(bar_stats[2]['Line_length']=='short'){
+            //     $scope.percentageWandos = 25;
+            // }
+            // if(bar_stats[2]['Line_length']=='medium'){
+            //     $scope.percentageWandos = 75;
+            // }
+            // if(bar_stats[2]['Line_length']=='long'){
+            //     $scope.percentageWandos = 100;
+            // }
+            //
+            //
+            // //KK Progress Bar
+            // $scope.percentageKK = 0;
+            // if(bar_stats[3]['Line_length']=='no line'){
+            //     $scope.percentageKK = 0;
+            // }
+            // if(bar_stats[3]['Line_length']=='short'){
+            //     $scope.percentageKK = 25;
+            // }
+            // if(bar_stats[3]['Line_length']=='medium'){
+            //     $scope.percentageKK = 75;
+            // }
+            // if(bar_stats[3]['Line_length']=='long'){
+            //     $scope.percentageKK = 100;
+            // }
+            //
+            //
+            // //Chasers Progress Bar
+            // $scope.percentageChasers = 0;
+            // if(bar_stats[4]['Line_length']=='no line'){
+            //     $scope.percentageChasers = 0;
+            // }
+            // if(bar_stats[4]['Line_length']=='short'){
+            //     $scope.percentageChasers = 25;
+            // }
+            // if(bar_stats[4]['Line_length']=='medium'){
+            //     $scope.percentageChasers = 75;
+            // }
+            // if(bar_stats[4]['Line_length']=='long'){
+            //     $scope.percentageChasers = 100;
+            // }
+            //
+            //
+            // //Whiskeys Progress Bar
+            // $scope.percentageWhiskeys = 0;
+            // if(bar_stats[5]['Line_length']=='no line'){
+            //     $scope.percentageWhiskeys = 0;
+            // }
+            // if(bar_stats[5]['Line_length']=='short'){
+            //     $scope.percentageWhiskeys = 25;
+            // }
+            // if(bar_stats[5]['Line_length']=='medium'){
+            //     $scope.percentageWhiskeys = 75;
+            // }
+            // if(bar_stats[5]['Line_length']=='long'){
+            //     $scope.percentageWhiskeys = 100;
+            // }
+            //
+            // //Nitty Progress Bar
+            // $scope.percentageNitty= 0;
+            // if(bar_stats[6]['Line_length']=='no line'){
+            //     $scope.percentageNitty = 0;
+            // }
+            // if(bar_stats[6]['Line_length']=='short'){
+            //     $scope.percentageNitty = 25;
+            // }
+            // if(bar_stats[6]['Line_length']=='medium'){
+            //     $scope.percentageNitty = 75;
+            // }
+            // if(bar_stats[6]['Line_length']=='long'){
+            //     $scope.percentageNitty = 100;
+            // }
 
 
         });
