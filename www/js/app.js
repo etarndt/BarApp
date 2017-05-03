@@ -135,10 +135,22 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
         // Map Settings //
         $scope.initialise = function() {
             var myLatlng = new google.maps.LatLng(43.072932, -89.396565);
+            var myStyles =[
+                {
+                    featureType: "poi",
+                    elementType: "labels",
+                    stylers: [
+                        { visibility: "off" }
+                    ]
+                }
+            ];
             var mapOptions = {
                 center: myLatlng,
                 zoom: 16,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true,
+                clickableIcons: false,
+                styles: myStyles
             };
             var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
@@ -152,12 +164,12 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
                     position: currPos,
                     map: map,
                     // animation: google.maps.Animation.DROP,
-                    title: "My Location",
-                    content: "hardcoded at Grainger",
+                    title: "Current Location",
+                    // content: "hardcoded at Grainger",
                     icon: 'http://www.robotwoods.com/dev/misc/bluecircle.png'
                 });
                 google.maps.event.addListener(myLocation, 'click', function(){
-                    infoWindow.setContent('<h2>' + myLocation.title + '</h2>' + myLocation.content);
+                    infoWindow.setContent('<h2>' + myLocation.title);
                     infoWindow.open($scope.map, myLocation);
                 });
             });
