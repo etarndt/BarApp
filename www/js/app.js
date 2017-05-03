@@ -41,6 +41,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
             })
             .state('tabs.add', {
                 url:'/add',
+                cache: false,
                 views: {
                     'add-tab': {
                         templateUrl: 'templates/add.html',
@@ -50,6 +51,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
             })
             .state('tabs.summary', {
                 url:'/summary',
+                cache: false,
                 views: {
                     'summary-tab': {
                         templateUrl: 'templates/summary.html',
@@ -90,7 +92,8 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
     });
 
 
-    barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation, $window) {
+    barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation, $ionicHistory) {
+
 
         var options = {timeout: 10000, enableHighAccuracy: true};
 
@@ -219,7 +222,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
 
     });
 
-barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $stateParams, $ionicPopup) {
+barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $stateParams, $ionicPopup, $ionicHistory) {
     $scope.retrieve_data = function() {
 
 
@@ -330,18 +333,21 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
     $scope.retrieve_hours();
 
     $scope.back = function() {
-         $state.go('tabs.summary');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.summary') })
+         // $state.go('tabs.summary');
     }
 
 });
 
-barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter) {
+barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter, $ionicHistory) {
     $scope.back = function() {
-        $state.go('tabs.overview');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
+        // $state.go('tabs.overview');
     }
 
     $scope.backToCreateNew = function() {
-        $state.go('tabs.add');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.add') })
+        // $state.go('tabs.add');
     }
 
     $scope.help = function() {
@@ -542,7 +548,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
 
         $scope.addDataTimeAndCheck($stateParams.barID);
 
-        $state.go('tabs.overview');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
+        // $state.go('tabs.overview');
     }
 
     $scope.submitMedium = function() {
@@ -567,7 +574,7 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
 
         $scope.addDataTimeAndCheck($stateParams.barID);
 
-        $state.go('tabs.overview');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
     }
 
     $scope.submitShort = function() {
@@ -592,7 +599,7 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
 
         $scope.addDataTimeAndCheck($stateParams.barID);
 
-        $state.go('tabs.overview');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
     }
 
     $scope.submitNoLine = function() {
@@ -617,7 +624,7 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
 
         $scope.addDataTimeAndCheck($stateParams.barID);
 
-        $state.go('tabs.overview');
+        $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
     }
 
     $scope.todaysHours = function() {
