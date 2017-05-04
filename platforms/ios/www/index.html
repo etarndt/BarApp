@@ -20,6 +20,22 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
 
+
+    <!-- firebase, ignore for now -->
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCAN1msPQ6C5f7d2RDknR7fDGd-D-wzwH0",
+            authDomain: "barapp-1490919266684.firebaseapp.com",
+            databaseURL: "https://barapp-1490919266684.firebaseio.com",
+            projectId: "barapp-1490919266684",
+            storageBucket: "barapp-1490919266684.appspot.com",
+            messagingSenderId: "814586912261"
+        };
+        firebase.initializeApp(config);
+    </script>
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -30,15 +46,319 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-  </head>
-  <body ng-app="starter">
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyDNsEt2Kvxhu4WrQZgJC23GeM6IFqnXGcs"></script>
+
+    <script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+  </head>
+  <body ng-app="starter" class="platform-ios platform-cordova platform-webview">
+  <!--<ion-pane>-->
+    <!--<ion-header-bar class="bar-stable">-->
+      <!--<h1 class="title">Madison Bar Line App</h1>-->
+      <!--<div class="buttons">-->
+        <!--<button class="button button-icon ion-ios-gear"ng-click="settingsClick()"></button>-->
+      <!--</div>-->
+    <!--</ion-header-bar>-->
+  <ion-nav-bar class="bar-positive">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-view></ion-nav-view>
+
+  <script id="templates/tabs.html" type="text/ng-template">
+    <ion-tabs class="tabs-icon-top tabs-dark">
+
+      <ion-tab title="Overview" icon="ion-ios-world" href="#/tab/overview">
+        <ion-nav-view name="overview-tab"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="Create New" icon="ion-plus" href="#/tab/add">
+        <ion-nav-view name="add-tab"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="Summary" icon="ion-stats-bars" href="#/tab/summary">
+        <ion-nav-view name="summary-tab"></ion-nav-view>
+      </ion-tab>
+
+    </ion-tabs>
+  </script>
+
+  <script id="templates/overview.html" type="text/ng-template">
+    <ion-view title="Overview">
+      <!--<ion-nav-buttons side="right">-->
+        <!--<button class="button button-icon ion-ios-gear"ng-click="settingsClick()"></button>-->
+      <!--</ion-nav-buttons>-->
+      <ion-nav-buttons side="left">
+      <button class="button button-icon ion-ios-search">Madison</button>
+      </ion-nav-buttons>
       <ion-content>
+        <div id="map" data-tap-disabled="true"></div>
       </ion-content>
-    </ion-pane>
+    </ion-view>
+  </script>
+
+  <script id="templates/add.html" type="text/ng-template">
+    <ion-view title="Create New">
+      <ion-nav-buttons side="right">
+        <button class="button button-icon ion-help"ng-click="help()"></button>
+      </ion-nav-buttons>
+      <!--<ion-nav-buttons side="left">-->
+        <!--<button class="button button-icon ion-close"ng-click="back()"></button>-->
+      <!--</ion-nav-buttons>-->
+      <ion-content>
+        <div class="item item-divider">
+          What bar are you at?
+        </div>
+        <ion-list>
+          <li class="item" ng-click="line(1)" ng-value="line">
+            <div class="row">
+            <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
+            <div class="col"><h2>The Double U</h2><p>Today's Hours: {{todaysHoursDoubleU}}</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line(2)" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/wandos2.jpg'> </div>
+              <div class="col"><h2>Wandos</h2><p>Today's Hours: {{todaysHoursWandos}}</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line(3)" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
+              <div class="col"><h2>The Kollege Klub</h2><p>Today's Hours: {{todaysHoursKK}}</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line(4)" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
+              <div class="col"><h2>Chasers Bar and Grille</h2><p>Today's Hours: {{todaysHoursChasers}}</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line(5)" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
+              <div class="col"><h2>Whiskey Jacks Saloon</h2><p>Today's Hours: {{todaysHoursWhiskeys}}</p> </div>
+            </div>
+          </li>
+          <li class="item" ng-click="line(6)" ng-value="line">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
+              <div class="col"><h2>The Nitty Gritty</h2><p>Today's Hours: {{todaysHoursNitty}}</p> </div>
+            </div>
+          </li>
+        </ion-list>
+      </ion-content>
+    </ion-view>
+</script>
+
+  <script id="templates/line.html" type="text/ng-template">
+    <ion-view title="Create New">
+      <ion-nav-buttons side="right">
+        <button class="button button-icon ion-help"ng-click="help()"></button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon ion-ios-arrow-back"ng-click="backToCreateNew()"></button>
+      </ion-nav-buttons>
+      <ion-content>
+        <div class="item item-divider">
+          How's the line
+        </div>
+        <button class="button button-full button-stable" ng-click="submitLong()">
+          Long
+        </button>
+        <button class="button button-full button-stable" ng-click="submitMedium()">
+          Medium
+        </button>
+        <button class="button button-full button-stable" ng-click="submitShort()">
+          Short
+        </button>
+        <button class="button button-full button-stable" ng-click="submitNoLine()">
+          No Line
+        </button>
+
+      </ion-content>
+    </ion-view>
+  </script>
+
+  <script id="templates/summary.html" type="text/ng-template">
+    <ion-view title="Summary">
+      <h1>Summary</h1>
+      <ion-nav-buttons side="right">
+        <button class="button button-icon ion-help"ng-click="help()"></button>
+      </ion-nav-buttons>
+      <ion-content>
+
+        <div class="item item-divider">
+          Bar times
+        </div>
+
+        <ul class="list">
+
+          <li class="item" ng-click="results('Double U')">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/uu.png'> </div>
+              <div class="col">
+                <h2>The Double U</h2>
+                <p> Average wait time is...<b>{{waitDoubleU}}</b></p>
+                <progress  max="100" value={{percentageDoubleU}}></progress>
+              </div>
+
+            </div>
+
+
+          </li>
+          <li class="item" ng-click="results('Wandos')" >
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/wandos2.jpg'> </div>
+              <div class="col">
+                <h2>Wandos</h2>
+                <p> Average wait time is...<b>{{waitWandos}}</b></p>
+                <progress  max="100" value={{percentageWandos}}></progress>
+              </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('The Kollege Klub')" >
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/kk.jpg'> </div>
+              <div class="col">
+                <h2>The Kollege Klub</h2>
+                <p> Average wait time is...<b>{{waitKK}}</b></p>
+                <progress  max="100" value={{percentageKK}}></progress>
+              </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('Chasers Bar and Grille')" >
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/chasers.jpeg'> </div>
+              <div class="col">
+                <h2>Chasers Bar and Grille</h2>
+                <p> Average wait time is...<b>{{waitChasers}}</b></p>
+                <progress  max="100" value={{percentageChasers}}></progress>
+              </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('Whiskey Jacks Saloon')" >
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/whiskeys.png'> </div>
+              <div class="col">
+                <h2>Whiskey Jacks Saloon</h2>
+                <p> Average wait time is...<b>{{waitWhiskeys}}</b></p>
+                <progress  max="100" value={{percentageWhiskeys}}></progress>
+              </div>
+            </div>
+          </li>
+          <li class="item" ng-click="results('Nitty Gritty')">
+            <div class="row">
+              <div class="col col-25"><img width="75px" height="75px" src='img/nitty.png'> </div>
+              <div class="col">
+                <h2>The Nitty Gritty</h2>
+                <p> Average wait time is...<b>{{waitNitty}}</b></p>
+                <progress  max="100" value={{percentageNitty}}></progress>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </ion-content>
+    </ion-view>
+</script>
+
+  <script id="templates/results.html" type="text/ng-template">
+    <ion-view title="Summary">
+      <ion-nav-buttons side="right">
+        <button class="button button-icon ion-help"ng-click="help()"></button>
+      </ion-nav-buttons>
+      <ion-nav-buttons side="left">
+        <button class="button button-icon ion-ios-arrow-back"ng-click="back()"></button>
+      </ion-nav-buttons>
+
+
+      <ion-content>
+        <div class="item item-divider">
+          Hours
+        </div>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+            <div class="col col-50"><h3>Monday</h3></div>
+            <div> <p> {{mondayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Tuesday</h3></div>
+              <div> <p> {{tuesdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Wednesday</h3></div>
+              <div> <p> {{wednesdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Thursday</h3></div>
+              <div> <p> {{thursdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Friday</h3></div>
+              <div> <p> {{fridayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Saturday</h3></div>
+              <div> <p> {{saturdayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+        <ion-card (tap)="tapEvent($event)">
+          <ion-item>
+            <div class="row">
+              <div class="col col-50"><h3>Sunday</h3></div>
+              <div> <p> {{sundayHours}} </p></div>
+            </div>
+          </ion-item>
+        </ion-card>
+      </ion-content>
+    </ion-view>
+  </script>
+
+  <script id="templates/settings.html" type="text/ng-template">
+  <ion-view title="Settings">
+    <ion-nav-buttons side="left">
+      <button class="button button-icon ion-ios-arrow-back"ng-click="back()">Back</button>
+    </ion-nav-buttons>
+    <ion-content class="padding">
+      <div class="list">
+        <div class="item item-divider">
+          Personalization
+        </div>
+        <ion-toggle ng-model="toggle_binding_1.checked"
+                    ng-change="on_toggle1_change()">
+          Push Notifications
+        </ion-toggle>
+        <ion-toggle ng-model="toggle_binding_2.checked"
+                    ng-change="on_toggle2_change()">
+          Enable Sounds
+        </ion-toggle>
+      </div>
+    </ion-content>
+  </ion-view>
+  </script>
+
   </body>
 </html>

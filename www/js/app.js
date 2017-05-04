@@ -92,8 +92,7 @@ var barApp = angular.module('starter', ['ionic', 'ngCordova', "firebase"])
     });
 
 
-    barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation, $ionicHistory) {
-
+    barApp.controller('overviewCtrl', function($scope, $state, $cordovaGeolocation, $ionicHistory, $cordovaDevice, $ionicPopup) {
 
         var options = {timeout: 10000, enableHighAccuracy: true};
 
@@ -351,7 +350,7 @@ barApp.controller('resultsCtrl', function($scope, $state, $cordovaGeolocation, $
 
 });
 
-barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter, $ionicHistory) {
+barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $ionicPopup, $stateParams, $filter, $ionicHistory, $cordovaDevice) {
     $scope.back = function() {
         $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
         // $state.go('tabs.overview');
@@ -537,6 +536,45 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
         });
     }
 
+    $scope.checkUUIDAddDataTimeAndCheck = function(ID) {
+        ionic.Platform.ready(function(){
+            return firebase.database().ref('Data').once('value').then(function (snapshot) {
+                // console.log(snapshot.val()[$stateParams.barID]['UUID'])
+                var array = []
+                var data = snapshot.val()[$stateParams.barID]['UUID']
+
+                var values =  []
+                for (var name in data) {
+                    values.push(data[name])
+                }
+                console.log(values.length)
+
+                $scope.inList = 0
+
+                for (z = 0; z < values.length; z++){
+                    if ($cordovaDevice.getUUID() == values[z]) {
+                        $scope.inList = 1
+                    }
+                }
+
+                if ($scope.inList == 1) {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'No Submission',
+                        template: 'You already posted a short time ago. Please try again later.'
+                    });
+                } else {
+                    $scope.addDataTimeAndCheck(ID);
+                    setTimeout(function(){return firebase.database().ref('Data/' + $stateParams.barID + '/UUID').push($cordovaDevice.getUUID())
+                    },2000);
+
+                }
+
+            });
+            });
+            //console.log($cordovaDevice.getUUID())
+        // return firebase.database().ref('Data/' + $stateParams.barID).child('UUID').push(1)
+        // return firebase.database().ref('Data/' + $stateParams.barID).child('UUID').remove()
+    }
 
     $scope.submitLong = function() {
         $scope.addData = function () {
@@ -558,7 +596,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addDataTimeAndCheck($stateParams.barID);
+        $scope.checkUUIDAddDataTimeAndCheck($stateParams.barID);
+        // $scope.addDataTimeAndCheck($stateParams.barID);
 
         $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
         // $state.go('tabs.overview');
@@ -584,7 +623,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addDataTimeAndCheck($stateParams.barID);
+        $scope.checkUUIDAddDataTimeAndCheck($stateParams.barID);
+        // $scope.addDataTimeAndCheck($stateParams.barID);
 
         $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
     }
@@ -609,7 +649,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addDataTimeAndCheck($stateParams.barID);
+        $scope.checkUUIDAddDataTimeAndCheck($stateParams.barID);
+        // $scope.addDataTimeAndCheck($stateParams.barID);
 
         $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
     }
@@ -634,7 +675,8 @@ barApp.controller('buttonCtrl', function($scope, $state, $cordovaGeolocation, $i
             });
         }
 
-        $scope.addDataTimeAndCheck($stateParams.barID);
+        $scope.checkUUIDAddDataTimeAndCheck($stateParams.barID);
+        // $scope.addDataTimeAndCheck($stateParams.barID);
 
         $ionicHistory.clearCache().then(function(){ $state.go('tabs.overview') })
     }

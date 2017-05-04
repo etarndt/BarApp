@@ -24,6 +24,9 @@ var noLineSnapshot = eventSnapshot.child('noline');
 if ((lastTime - firstTime) >= 1) {
     if (longSnapshot.changed()) {
 
+        eventSnapshot.ref.child('UUID').remove()
+        eventSnapshot.ref.child('UUID').push(1)
+
             return eventSnapshot.ref.update({
                 long: 1, medium: 0, noline: 0, short: 0,
                 Line_length: "long", firstTimestamp: lastTime
@@ -31,6 +34,9 @@ if ((lastTime - firstTime) >= 1) {
 
     }
     if (shortSnapshot.changed()) {
+
+        eventSnapshot.ref.child('UUID').remove()
+        eventSnapshot.ref.child('UUID').push(1)
 
             return eventSnapshot.ref.update({
                 long: 0, medium: 0, noline: 0, short: 1,
@@ -40,6 +46,9 @@ if ((lastTime - firstTime) >= 1) {
     }
     if (mediumSnapshot.changed()) {
 
+        eventSnapshot.ref.child('UUID').remove()
+        eventSnapshot.ref.child('UUID').push(1)
+
             return eventSnapshot.ref.update({
                 long: 0, medium: 1, noline: 0, short: 0,
                 Line_length: "medium", firstTimestamp: lastTime
@@ -47,6 +56,9 @@ if ((lastTime - firstTime) >= 1) {
 
     }
     if (noLineSnapshot.changed()) {
+
+        eventSnapshot.ref.child('UUID').remove()
+        eventSnapshot.ref.child('UUID').push(1)
 
             return eventSnapshot.ref.update({
                 long: 0, medium: 0, noline: 1, short: 0,
